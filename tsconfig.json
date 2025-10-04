@@ -1,10 +1,8 @@
 {
-  "extends": "@pega/tsconfig/index.json",
   "include": ["./**/*", ".storybook/**/*"],
   "exclude": [
     "**/*.mjs",
     "dist",
-    "**/*.test.tsx",
     "node_modules",
     "lib",
     "storybook-static",
@@ -19,6 +17,23 @@
     "baseUrl": "./",
     "paths": {
       "@pega/pcore-pconnect-typedefs/*": ["node_modules/@pega/pcore-pconnect-typedefs/*"]
-    }
+    },
+    "strict": true,
+    "noImplicitOverride": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+  "sourceMap": true,
+  "newLine": "lf",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "target": "ES2023",
+    "useDefineForClassFields": true
   }
 }
