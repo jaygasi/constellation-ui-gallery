@@ -16,7 +16,7 @@ import { searchPlugin, RenderSearchProps } from '@react-pdf-viewer/search';
 import { FaSearch, FaSearchMinus, FaSearchPlus, FaStepBackward, FaStepForward } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import { withConfiguration } from '@pega/cosmos-react-core';
-import { ViewerWrapper } from './styles';
+import { PDFViewerContainer, ViewerWrapper } from './styles';
 import { PDFViewerDiagnostics } from './diagnostics';
 
 // Add global error handler for PDF.js to catch any canvas issues
@@ -308,29 +308,20 @@ const PegaExtensionsPDFViewer: React.FC<PDFViewerProps> = ({
   };
 
   return (
-    <div
-      style={{
-        height: height || '600px',
-        width: '100%',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
-    >
+    <PDFViewerContainer style={{ height: height || '600px' }}>
       {showToolbar && pdfUrl && (
         <div className="rpv-core__toolbar">
           <div className="rpv-core__toolbar-left">
             <ZoomOut>
               {(props: RenderZoomOutProps) => (
-                <button className="rpv-core__button" onClick={props.onClick}>
+                <button className="rpv-core__button" onClick={props.onClick} title="Zoom Out">
                   <FaSearchMinus />
                 </button>
               )}
             </ZoomOut>
             <ZoomIn>
               {(props: RenderZoomInProps) => (
-                <button className="rpv-core__button" onClick={props.onClick}>
+                <button className="rpv-core__button" onClick={props.onClick} title="Zoom In">
                   <FaSearchPlus />
                 </button>
               )}
@@ -339,7 +330,12 @@ const PegaExtensionsPDFViewer: React.FC<PDFViewerProps> = ({
           <div className="rpv-core__toolbar-middle">
             <GoToPreviousPage>
               {(props: RenderGoToPageProps) => (
-                <button className="rpv-core__button" onClick={props.onClick}>
+                <button
+                  className="rpv-core__button"
+                  onClick={props.onClick}
+                  disabled={props.isDisabled}
+                  title="Previous Page"
+                >
                   <FaStepBackward />
                 </button>
               )}
@@ -348,14 +344,19 @@ const PegaExtensionsPDFViewer: React.FC<PDFViewerProps> = ({
               <CurrentPageLabel>
                 {(props: RenderCurrentPageLabelProps) => <span>{props.currentPage + 1}</span>}
               </CurrentPageLabel>
+              <span>/</span>
+              <NumberOfPages>
+                {(props: RenderNumberOfPagesProps) => <span>{props.numberOfPages}</span>}
+              </NumberOfPages>
             </div>
-            /
-            <NumberOfPages>
-              {(props: RenderNumberOfPagesProps) => <span>{props.numberOfPages}</span>}
-            </NumberOfPages>
             <GoToNextPage>
               {(props: RenderGoToPageProps) => (
-                <button className="rpv-core__button" onClick={props.onClick}>
+                <button
+                  className="rpv-core__button"
+                  onClick={props.onClick}
+                  disabled={props.isDisabled}
+                  title="Next Page"
+                >
                   <FaStepForward />
                 </button>
               )}
@@ -364,10 +365,10 @@ const PegaExtensionsPDFViewer: React.FC<PDFViewerProps> = ({
           <div className="rpv-core__toolbar-right">
             <Search>
               {(props: RenderSearchProps) => (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="pega-pdf-search-container">
                   <input
                     type="text"
-                    placeholder="Enter to search"
+                    placeholder="Search"
                     value={props.keyword}
                     onChange={(e) => props.setKeyword(e.target.value)}
                     onKeyDown={(e) => {
@@ -377,7 +378,7 @@ const PegaExtensionsPDFViewer: React.FC<PDFViewerProps> = ({
                     }}
                     className="rpv-core__search-input"
                   />
-                  <button className="rpv-core__button" onClick={props.search}>
+                  <button className="rpv-core__button" onClick={props.search} title="Search">
                     <FaSearch />
                   </button>
                 </div>
@@ -386,17 +387,14 @@ const PegaExtensionsPDFViewer: React.FC<PDFViewerProps> = ({
           </div>
         </div>
       )}
-      <div style={{ height: '100%', padding: 0, flex: 1 }}>
-        <ViewerWrapper
-          className="pega-pdfviewer-wrapper"
-          ref={wrapperRef}
-          style={{ height: '100%', width: '100%' }}
-          data-testid="pdf-viewer-wrapper"
-        >
-          {showDiagnostics && <PDFViewerDiagnostics value={value} height={height} />}
-          {renderContent()}
-        </ViewerWrapper>
-      </div>
+      <ViewerWrapper
+        className="pega-pdfviewer-wrapper"
+        ref={wrapperRef}
+        data-testid="pdf-viewer-wrapper"
+      >
+        {showDiagnostics && <PDFViewerDiagnostics value={value} height={height} />}
+        {renderContent()}
+      </ViewerWrapper>
       {showDiagnostics && (
         <div
           style={{
@@ -419,7 +417,7 @@ const PegaExtensionsPDFViewer: React.FC<PDFViewerProps> = ({
           {error && <div style={{ color: 'red' }}>error: {error}</div>}
         </div>
       )}
-    </div>
+    </PDFViewerContainer>
   );
 };
 
